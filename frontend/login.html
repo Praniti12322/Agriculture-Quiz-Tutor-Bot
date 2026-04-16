@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Agriculture AI</title>
+    <link rel="icon" type="image/png" href="/static/logo.png">
+    <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <img src="/static/logo.png" alt="Agriculture AI Logo" class="top-logo">
+            <h1 class="text-center mb-2">Welcome Back</h1>
+            <p class="text-center mb-6">Log in to continue your agriculture learning journey.</p>
+            
+            <div id="loginAlert" class="alert"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required placeholder="Enter your username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="Enter your password">
+                </div>
+                <button type="submit" class="btn" id="loginBtn">Start Learning</button>
+            </form>
+            
+            <p class="text-center mt-4">
+                Don't have an account? <a href="/signup.html" class="link">Sign up</a>
+            </p>
+        </div>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>

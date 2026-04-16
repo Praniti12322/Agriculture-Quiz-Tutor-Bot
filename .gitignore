@@ -1,0 +1,21 @@
+# Environment variables
+.env
+
+# Python caching
+__pycache__/
+*.pyc
+
+# Database
+backend/users.db
+
+# Notebooks
+.ipynb_checkpoints/
+
+# User Uploads
+uploads/*
+!uploads/.gitkeep
+
+# Other IDE files
+.vscode/
+.idea/
+.gemini/

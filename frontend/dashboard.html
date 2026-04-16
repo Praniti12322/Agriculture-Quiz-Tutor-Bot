@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Agriculture AI</title>
+    <link rel="icon" type="image/png" href="/static/logo.png">
+    <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+    <div class="nav">
+        <button id="logoutBtn" class="btn" style="padding: 0.5rem 1rem; width: auto; background: var(--surface-color); border: 1px solid var(--border-color);">Logout</button>
+    </div>
+    <div class="container">
+        <div class="card dashboard-card">
+            <img src="/static/logo.png" alt="Agriculture AI Logo" class="top-logo">
+            <h1 class="mb-2">Hello, <span class="user-name-display">Agri-Student</span>!</h1>
+            <p class="mb-6">Welcome to your dashboard. Ready to test your agricultural knowledge today?</p>
+            
+            <div class="grid">
+                <div class="feature-card" onclick="window.location.href='/bot.html'">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🌱</div>
+                    <h3>Tutor Bot</h3>
+                    <p style="font-size: 0.9rem;">Test your knowledge on farming, crops, and soils with AI-generated quizzes.</p>
+                </div>
+                <div class="feature-card" onclick="window.location.href='/progress.html'">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+                    <h3>Your Progress</h3>
+                    <p style="font-size: 0.9rem;">Track your learning journey and mastery of agricultural topics.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="/static/script.js?v=2"></script>
+    <script>
+        if (!localStorage.getItem('token')) {
+            window.location.href = '/login.html';
+        }
+    </script>
+</body>
+</html>

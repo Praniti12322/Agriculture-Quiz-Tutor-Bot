@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress - Agriculture AI</title>
+    <link rel="icon" type="image/png" href="/static/logo.png">
+    <link rel="stylesheet" href="/static/index.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .progress-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .metric-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        .chart-container {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <button onclick="window.location.href='/dashboard.html'" class="btn" style="padding: 0.5rem 1rem; width: auto; background: var(--surface-color); border: 1px solid var(--border-color); margin-right: 1rem;">Back</button>
+        <button id="logoutBtn" class="btn" style="padding: 0.5rem 1rem; width: auto; background: var(--surface-color); border: 1px solid var(--border-color);">Logout</button>
+    </div>
+    
+    <div class="progress-container">
+        <div class="card" style="max-width: none; padding: 2rem;">
+            <img src="/static/logo.png" alt="Agriculture AI Logo" class="top-logo">
+            <h1 class="mb-6 text-center"><span class="user-name-display">Agri-Student</span>'s Learning Profile</h1>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value" id="totalPlayed">-</div>
+                    <div style="color: var(--text-secondary);">Questions Answered</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="totalCorrect">-</div>
+                    <div style="color: var(--text-secondary);">Correct Answers</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="accuracy">-</div>
+                    <div style="color: var(--text-secondary);">Overall Accuracy</div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="progressChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js?v=2"></script>
+    <script>
+        if (!localStorage.getItem('token')) {
+            window.location.href = '/login.html';
+        }
+    </script>
+</body>
+</html>

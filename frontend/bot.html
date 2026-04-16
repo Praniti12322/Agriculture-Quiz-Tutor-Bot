@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor Bot - Agriculture AI</title>
+    <meta name="description" content="AI-powered Agriculture Quiz Bot with multimodal questions — text, image, audio, and video.">
+    <link rel="icon" type="image/png" href="/static/logo.png">
+    <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+    <div class="nav">
+        <button onclick="window.location.href='/dashboard.html'" class="btn" id="backBtn" style="padding:0.5rem 1rem;width:auto;background:var(--surface-color);border:1px solid var(--border-color);margin-right:1rem;">← Back</button>
+        <button id="logoutBtn" class="btn" style="padding:0.5rem 1rem;width:auto;background:var(--surface-color);border:1px solid var(--border-color);">Logout</button>
+    </div>
+
+    <div class="bot-container">
+        <img src="/static/logo.png" alt="Agriculture AI Logo" class="top-logo">
+        <h1 class="text-center">Welcome, <span class="user-name-display">Agri-Student</span>!</h1>
+        <p class="text-center">Test your knowledge with AI-generated questions across text, image, audio &amp; video scenarios.</p>
+
+        <!-- Question Type Selector -->
+        <div class="q-type-selector">
+            <button class="q-type-btn active" data-type="random" id="typeRandom">🎲 Random</button>
+            <button class="q-type-btn" data-type="text"   id="typeText">🔤 Text</button>
+            <button class="q-type-btn" data-type="image"  id="typeImage">🖼️ Image</button>
+            <button class="q-type-btn" data-type="audio"  id="typeAudio">🎵 Audio</button>
+            <button class="q-type-btn" data-type="video"  id="typeVideo">🎬 Video</button>
+        </div>
+
+        <!-- Media Upload Zone -->
+        <div class="upload-zone" id="uploadZone">
+            <div class="upload-icon">📤</div>
+            <div class="upload-label">Upload your own media</div>
+            <div class="upload-hint">Drag & drop or click to select (Image, Audio, or Video)</div>
+            <input type="file" id="mediaFileInput" style="display: none;" accept="image/*,audio/*,video/*">
+            <button class="btn upload-btn" id="uploadTriggerBtn" onclick="document.getElementById('mediaFileInput').click()">Select File</button>
+            <div id="uploadFileName" class="upload-filename"></div>
+            <button class="btn upload-btn" id="uploadSubmitBtn" style="display: none; margin-top: 0.5rem; background: var(--primary-color);">Generate from Upload ↑</button>
+        </div>
+
+        <!-- Chat Box -->
+        <div class="chat-box">
+            <div class="chat-header">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:1.5rem;">🤖</span>
+                    <strong style="font-size:1.1rem;">Tutor Bot</strong>
+                    <span id="currentQTypeBadge" class="q-badge badge-text" style="display:none;"></span>
+                </div>
+                <div>
+                    <span style="color:var(--text-secondary);">Score: </span>
+                    <strong id="scoreDisplay" style="color:var(--primary-color);font-size:1.2rem;">0/0</strong>
+                </div>
+            </div>
+
+
+            <div class="chat-content" id="chatContent">
+                <div class="message bot-msg">
+                    👋 Hello! I'm your AI Agriculture Tutor.<br>
+                    Click <strong>Generate Question</strong> below — or choose a question type above.<br>
+                    You can also <strong>upload an image, audio, or video</strong> to generate a question from your own content!
+                </div>
+            </div>
+
+            <div class="chat-footer">
+                <button id="generateBtn" class="btn generate-btn">⚡ Generate Question</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js?v=4"></script>
+    <script>
+        if (!localStorage.getItem('token')) {
+            window.location.href = '/login.html';
+        }
+    </script>
+</body>
+</html>
