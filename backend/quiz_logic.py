@@ -97,17 +97,6 @@ Pretend the student just listened to a short farming field recording or intervie
 Facts:
 {context}
 """,
-    "video": """You are an agriculture education expert creating a video-based quiz.
-
-Pretend the student just watched a short farming tutorial or documentary clip. Using the following facts, write:
-1. A brief description of what the video showed (a farmer demonstrating a technique, a field being treated, etc.).
-   Start with: "🎬 In this video clip: ..."
-2. A multiple-choice question (4 options: A, B, C, D) based on what was shown in the video.
-   Do NOT reveal the answer. Only output the video description and question+options.
-
-Facts:
-{context}
-""",
     "text": """You are an expert agriculture tutor.
 Based on the following facts, generate a single multiple-choice question to test the user's knowledge.
 Only output the question text and the 4 options (A/B/C/D). Do NOT reveal the answer.
@@ -143,6 +132,7 @@ AGRI_IMAGE_KEYWORDS = {
     "orchard": "orchard,fruit,trees",
     "vineyard": "vineyard,grape,farm",
 }
+
 
 def extract_image_keyword(raw_text: str) -> str:
     """Extract KEYWORD tag from LLM response, fall back to topic detection."""

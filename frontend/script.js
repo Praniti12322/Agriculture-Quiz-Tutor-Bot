@@ -136,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
         text:  { label: '🔤 Text',  cls: 'badge-text'  },
         image: { label: '🖼️ Image', cls: 'badge-image' },
         audio: { label: '🎵 Audio', cls: 'badge-audio' },
-        video: { label: '🎬 Video', cls: 'badge-video' },
     };
 
     function showBadge(q_type) {
@@ -173,17 +172,11 @@ document.addEventListener('DOMContentLoaded', () => {
             audio.controls = true;
             audio.className = 'media-audio';
             mediaContainer.appendChild(audio);
-        } else if (q_type === 'video') {
-            const video = document.createElement('video');
-            video.src = media_url;
-            video.controls = true;
-            video.className = 'media-video';
-            mediaContainer.appendChild(video);
         }
         return mediaContainer;
     }
 
-    function addMessage(text, type, options = null, animate = false, q_type = null, media_url = null) {
+    function addMessage(text, type, options = null, animate = false, q_type = null, media_url = null, postMediaText = null) {
         const msgDiv = document.createElement('div');
         msgDiv.className = `message ${type}`;
         const textSpan = document.createElement('div');
@@ -205,6 +198,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (media_url) {
                         const mediaEl = createMediaElement(q_type, media_url);
                         if (mediaEl) msgDiv.appendChild(mediaEl);
+                    }
+                    if (postMediaText) {
+                        const postSpan = document.createElement('div');
+                        postSpan.className = 'msg-text post-media-text';
+                        postSpan.innerHTML = renderMarkdown(postMediaText);
+                        msgDiv.appendChild(postSpan);
                     }
                     if (options && options.length > 0) appendOptions(msgDiv, options);
                     chatContent.scrollTop = chatContent.scrollHeight;
@@ -229,10 +228,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Add Media (Images/Video/REAL Audio files) between text and options
-        // Only show media element if media_url exists
         if (media_url) {
             const mediaEl = createMediaElement(q_type, media_url);
             if (mediaEl) msgDiv.appendChild(mediaEl);
+        }
+
+        if (postMediaText) {
+            const postSpan = document.createElement('div');
+            postSpan.className = 'msg-text post-media-text';
+            postSpan.innerHTML = renderMarkdown(postMediaText);
+            msgDiv.appendChild(postSpan);
         }
 
         if (options && options.length > 0) appendOptions(msgDiv, options);
@@ -363,10 +368,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const lines = questionText.split('\n').filter(l => l.trim());
             const optLines = lines.filter(l => /^[A-D][.)]\s/.test(l.trim()));
             const qLines = lines.filter(l => !optLines.includes(l));
-            const questionBody = qLines.join('\n') || questionText;
-            addMessage(questionBody, 'bot-msg', optLines.length ? optLines : options, false, currentQType, data.media_url);
             
-            if (currentQType === 'audio') speakText(questionBody);
+            // Split scenario from actual question if media is present
+            let mainBody = qLines.join('\n');
+            let postText = null;
+            
+            if (data.media_url && qLines.length > 1) {
+                // Usually the last line is the question
+                postText = qLines[qLines.length - 1];
+                mainBody = qLines.slice(0, qLines.length - 1).join('\n');
+            }
+
+            addMessage(mainBody, 'bot-msg', optLines.length ? optLines : options, false, currentQType, data.media_url, postText);
+            
+            if (currentQType === 'audio') speakText(questionText);
         } else {
             addMessage(questionText, 'bot-msg', null, false, currentQType, data.media_url);
             if (currentQType === 'audio') speakText(questionText);

@@ -92,14 +92,14 @@ def evaluate_answer(submission: AnswerSubmission, current_user: str = Depends(ge
     return {"evaluation": evaluation}
 
 # ── Quiz – Multimodal ──────────────────────────────────────────────
-SUPPORTED_TYPES = ["text", "image", "audio", "video"]
+SUPPORTED_TYPES = ["text", "image", "audio"]
 
 @app.get("/generate-question-multimodal")
 def generate_question_multimodal(
-    type: str = Query(default="random", description="text | image | audio | video | random"),
+    type: str = Query(default="random", description="text | image | audio | random"),
     current_user: str = Depends(get_current_user)
 ):
-    q_type = type if type in SUPPORTED_TYPES else random.choice(["text", "image", "audio", "video"])
+    q_type = type if type in SUPPORTED_TYPES else random.choice(["text", "image", "audio"])
     result = quiz_logic.generate_question_multimodal(q_type)
     return result
 

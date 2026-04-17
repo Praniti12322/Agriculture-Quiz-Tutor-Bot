@@ -4,14 +4,14 @@ A premium full-stack AI learning platform for agriculture, powered by **FAISS** 
 
 ## ✨ Key Features
 
-- **🎯 Integrated Quiz Layout**: Questions are rendered intuitively with the **Scenario/Text first**, followed by **Integrated Media** (Image/Audio/Video), and then the **Multiple Choice Options**, all within a single chat bubble.
+- **🎯 Integrated Quiz Layout**: Questions are rendered intuitively with the **Scenario/Text first**, followed by **Integrated Media** (Image/Audio), and then the **Multiple Choice Options**, all within a single chat bubble.
 - **🔊 Hear AI Scenarios (TTS)**: For audio-based quizzes, the bot uses the browser's built-in Text-to-Speech engine to read out AI-generated scenarios, complete with a natural pulsing neon "Hear AI Scenario" button.
 - **🖼️ Multimodal Support**:
   - **Dynamic Images**: Generated based on question context using LoremFlickr.
-  - **Real Audio/Video**: Full support for standard playback controls for uploaded or static media.
-- **📤 Custom Learning Path**: Users can upload their own farming media (Images, Audio, Video) to generate specific questions from their personal content.
+  - **Real Audio**: Full support for standard playback controls for uploaded or static media.
+- **📤 Custom Learning Path**: Users can upload their own farming media (Images or Audio) to generate specific questions from their personal content.
 - **📈 Progress Dashboard**: Track your agricultural knowledge growth with real-time performance visualizations (Chart.js).
-- **🔒 Secure Configuration**: Strictly environment-driven setup using `.env` files.
+- **🔒 Secure Authentication & Dashboard**: Built-in user authentication (SQLite/JWT) with a personalized learning dashboard.
 
 ## 🛠️ Prerequisites
 
@@ -35,7 +35,7 @@ A premium full-stack AI learning platform for agriculture, powered by **FAISS** 
 
 3. **Run the Server**
    ```bash
-   uvicorn backend.app:app --reload
+   uvicorn backend.app:app --reload --host 0.0.0.0
    ```
 
 4. **Access the Application**

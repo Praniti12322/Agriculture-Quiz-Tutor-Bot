@@ -441,37 +441,39 @@ input:focus {
 
 /* ── Media Display ──────────────────────────────────── */
 .media-display {
-  padding: 1rem 1.5rem 0;
-  border-top: 1px solid var(--border-color);
-  background: rgba(15, 23, 42, 0.3);
-  border-radius: 12px 12px 0 0;
+  padding: 1rem 0;
+  border-top: none;
+  background: transparent;
+  border-radius: 12px;
   animation: fadeIn 0.4s ease;
+  width: 100%;
 }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 .media-img {
+  width: 100%;
   max-width: 100%;
-  max-height: 320px;
-  border-radius: 10px;
-  object-fit: contain;
+  max-height: 400px;
+  border-radius: 16px;
+  object-fit: cover;
   display: block;
-  margin: 0 auto 1rem;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  margin: 0.5rem 0;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
 }
 .media-audio {
   width: 100%;
-  margin-bottom: 1rem;
-  border-radius: 8px;
+  margin: 0.5rem 0;
+  border-radius: 12px;
   accent-color: var(--primary-color);
+  background: rgba(15, 23, 42, 0.4);
 }
-.media-video {
-  width: 100%;
-  max-height: 280px;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  background: #000;
+
+.post-media-text {
+  margin-top: 1rem;
+  font-weight: 600;
 }
 
 /* ── Question Type Badges ───────────────────────────── */
@@ -487,7 +489,6 @@ input:focus {
 .badge-text  { background: rgba(59,130,246,0.2);  color: #93c5fd; border: 1px solid rgba(59,130,246,0.3);  }
 .badge-image { background: rgba(16,185,129,0.2);  color: #6ee7b7; border: 1px solid rgba(16,185,129,0.3);  }
 .badge-audio { background: rgba(245,158,11,0.2);  color: #fcd34d; border: 1px solid rgba(245,158,11,0.3);  }
-.badge-video { background: rgba(139,92,246,0.2);  color: #c4b5fd; border: 1px solid rgba(139,92,246, 0.3); }
 
 /* ── Chat Footer ────────────────────────────────────── */
 .chat-footer {
