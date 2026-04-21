@@ -150,3 +150,9 @@ Stop-Process -Id $pid -Force
 - ✅ **Updated `bot.html`** — Improved integrated quiz layout with scenario text, embedded media, and MCQ options in a single chat bubble.
 - ✅ **Updated `dashboard.html`** — Cleaner progress overview with daily chart data.
 - ✅ **Database migration** — Auto-adds `question_type` column to legacy `quiz_attempts` tables on startup.
+
+---
+
+## 📋 License
+
+This project is for educational purposes. Feel free to contribute or adapt it for your own agricultural projects!
