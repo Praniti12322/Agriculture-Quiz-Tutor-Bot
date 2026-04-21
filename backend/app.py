@@ -39,6 +39,10 @@ class AttemptSubmission(BaseModel):
     is_correct: bool
     question_type: Optional[str] = "text"
 
+class TutorChatRequest(BaseModel):
+    message: str
+    history: list = []
+
 # ── Startup ────────────────────────────────────────────────────────
 @app.on_event("startup")
 def on_startup():
@@ -157,6 +161,12 @@ def evaluate_multimodal(
         submission.media_context or ""
     )
     return {"evaluation": evaluation}
+
+# ── Tutor Chat ─────────────────────────────────────────────────────
+@app.post("/tutor-chat")
+def tutor_chat_endpoint(request: TutorChatRequest, current_user: str = Depends(get_current_user)):
+    response = quiz_logic.tutor_chat(request.message, request.history)
+    return {"response": response}
 
 # ── Progress ───────────────────────────────────────────────────────
 @app.post("/save-attempt")

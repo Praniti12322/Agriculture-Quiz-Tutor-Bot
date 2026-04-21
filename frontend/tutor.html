@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor Bot - Agriculture AI</title>
+    <meta name="description" content="AI-powered Agriculture Tutor.">
+    <link rel="icon" type="image/png" href="/static/logo.png">
+    <link rel="stylesheet" href="/static/index.css">
+    <style>
+        .tutor-input-area {
+            display: flex;
+            gap: 1rem;
+            width: 100%;
+        }
+        .tutor-input-area input {
+            flex: 1;
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text-primary);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .tutor-input-area input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+        .tutor-input-area button {
+            width: auto;
+            padding: 0 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <button onclick="window.location.href='/dashboard.html'" class="btn" id="backBtn" style="padding:0.5rem 1rem;width:auto;background:var(--surface-color);border:1px solid var(--border-color);margin-right:1rem;">← Back</button>
+        <button id="logoutBtn" class="btn" style="padding:0.5rem 1rem;width:auto;background:var(--surface-color);border:1px solid var(--border-color);">Logout</button>
+    </div>
+
+    <div class="bot-container">
+        <h1 class="text-center" style="margin-top: 2rem;">🤖 Agriculture Tutor Bot</h1>
+        <p class="text-center mb-6">Ask any farming-related question. Get clear, beginner-friendly explanations.</p>
+
+        <div class="chat-box" style="min-height: 500px;">
+            <div class="chat-header">
+                <div>
+                    <strong style="font-size:1.1rem; color: var(--primary-color);">AI Tutor</strong>
+                </div>
+                <button class="btn" id="clearChatBtn" style="width: auto; padding: 0.4rem 1rem; font-size: 0.85rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5;">🗑️ Clear Chat</button>
+            </div>
+
+            <div class="chat-content" id="tutorChatContent">
+                <div class="message bot-msg">
+                    <div class="msg-text">
+                        👋 Hello! I'm your AI Agriculture Tutor.<br>
+                        Ask me anything about crop growth, irrigation methods, soil health, fertilizers, pest control, or modern agriculture techniques.
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-footer" style="padding-top: 1rem;">
+                <form id="tutorForm" class="tutor-input-area">
+                    <input type="text" id="tutorInput" placeholder="E.g., How does drip irrigation work?" autocomplete="off" required>
+                    <button type="submit" class="btn generate-btn" id="sendBtn">Send ➔</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                localStorage.removeItem('token');
+                window.location.href = '/login.html';
+            });
+
+            const form = document.getElementById('tutorForm');
+            const input = document.getElementById('tutorInput');
+            const chatContent = document.getElementById('tutorChatContent');
+            const sendBtn = document.getElementById('sendBtn');
+            const clearChatBtn = document.getElementById('clearChatBtn');
+
+            let chatHistory = [];
+
+            // Simple Markdown renderer
+            function renderMarkdown(text) {
+                return text
+                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>')
+                    .replace(/^[-•]\s(.+)/gm, '<li>$1</li>')
+                    .replace(/(<li>.*<\/li>\n?)+/g, match => `<ul>${match}</ul>`)
+                    .replace(/\n/g, '<br>');
+            }
+
+            function addMessage(text, type, animate = false) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `message ${type}`;
+                const textSpan = document.createElement('div');
+                textSpan.className = 'msg-text';
+
+                if (animate) {
+                    msgDiv.appendChild(textSpan);
+                    chatContent.appendChild(msgDiv);
+                    chatContent.scrollTop = chatContent.scrollHeight;
+                    let i = 0, typed = '';
+                    const interval = setInterval(() => {
+                        if (i < text.length) {
+                            typed += text[i++];
+                            textSpan.innerHTML = renderMarkdown(typed);
+                            chatContent.scrollTop = chatContent.scrollHeight;
+                        } else {
+                            clearInterval(interval);
+                        }
+                    }, 10);
+                    return msgDiv;
+                }
+
+                textSpan.innerHTML = renderMarkdown(text);
+                msgDiv.appendChild(textSpan);
+                chatContent.appendChild(msgDiv);
+                chatContent.scrollTop = chatContent.scrollHeight;
+                return msgDiv;
+            }
+
+            function showTypingIndicator() {
+                const div = document.createElement('div');
+                div.className = 'message bot-msg';
+                div.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+                chatContent.appendChild(div);
+                chatContent.scrollTop = chatContent.scrollHeight;
+                return div;
+            }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const text = input.value.trim();
+                if (!text) return;
+
+                addMessage(text, 'user-msg');
+                input.value = '';
+                input.disabled = true;
+                sendBtn.disabled = true;
+
+                const typing = showTypingIndicator();
+
+                try {
+                    const res = await fetch('/tutor-chat', {
+                        method: 'POST',
+                        headers: { 
+                            'Authorization': `Bearer ${token}`, 
+                            'Content-Type': 'application/json' 
+                        },
+                        body: JSON.stringify({
+                            message: text,
+                            history: chatHistory
+                        })
+                    });
+
+                    if (res.status === 401) { 
+                        localStorage.removeItem('token'); 
+                        window.location.href = '/login.html'; 
+                        return; 
+                    }
+
+                    const data = await res.json();
+                    typing.remove();
+                    
+                    if (data.response) {
+                        addMessage(data.response, 'bot-msg', true);
+                        chatHistory.push({role: "user", content: text});
+                        chatHistory.push({role: "assistant", content: data.response});
+                        
+                        // Keep history manageable
+                        if(chatHistory.length > 20) {
+                            chatHistory = chatHistory.slice(chatHistory.length - 20);
+                        }
+                    } else {
+                        addMessage('Sorry, I am having trouble understanding that right now.', 'bot-msg');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    typing.remove();
+                    addMessage('❌ Error connecting to server.', 'bot-msg');
+                } finally {
+                    input.disabled = false;
+                    sendBtn.disabled = false;
+                    input.focus();
+                }
+            });
+
+            clearChatBtn.addEventListener('click', () => {
+                chatHistory = [];
+                chatContent.innerHTML = `
+                    <div class="message bot-msg">
+                        <div class="msg-text">
+                            👋 Hello! I'm your AI Agriculture Tutor.<br>
+                            Ask me anything about crop growth, irrigation methods, soil health, fertilizers, pest control, or modern agriculture techniques.
+                        </div>
+                    </div>`;
+                localStorage.removeItem('tutorHistory');
+            });
+            
+            // Basic session persistence for the chat window reload
+            const loadedHistory = localStorage.getItem('tutorHistory');
+            if (loadedHistory) {
+                try {
+                    const parsed = JSON.parse(loadedHistory);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                         chatHistory = parsed;
+                         chatContent.innerHTML = '';
+                         parsed.forEach(msg => {
+                              addMessage(msg.content, msg.role === 'user' ? 'user-msg' : 'bot-msg');
+                         });
+                    }
+                } catch(e) {}
+            }
+            
+            // Save history periodically or on window close
+            window.addEventListener('beforeunload', () => {
+                if(chatHistory.length > 0) {
+                    localStorage.setItem('tutorHistory', JSON.stringify(chatHistory));
+                }
+            });
+        });
+    </script>
+</body>
+</html>

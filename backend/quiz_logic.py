@@ -268,3 +268,35 @@ Then provide a warm, detailed explanation with key facts. Use bullet points wher
         temperature=0.3,
     )
     return chat_completion.choices[0].message.content.strip()
+
+def tutor_chat(user_message: str, history: list) -> str:
+    """Conversational endpoint. Incorporate FAISS context and previous history."""
+    if index is not None and documents:
+        query_embedding = embedder.encode([user_message])
+        D, I = index.search(np.array(query_embedding, dtype=np.float32), k=2)
+        kb_context = "\n".join([documents[i] for i in I[0] if i < len(documents)])
+    else:
+        kb_context = "Knowledge base not loaded."
+
+    system_prompt = f"""You are a friendly, expert Agriculture AI Tutor.
+Your goal is to answer the user's farming-related questions clearly and concisely.
+Provide simple and beginner-friendly explanations.
+If relevant, use the following knowledge base facts to ground your answer:
+{kb_context}
+"""
+
+    messages = [{"role": "system", "content": system_prompt}]
+    for msg in history:
+        messages.append({"role": msg.get("role", "user"), "content": msg.get("content", "")})
+    messages.append({"role": "user", "content": user_message})
+
+    try:
+        chat_completion = client.chat.completions.create(
+            messages=messages,
+            model=MODEL_NAME,
+            temperature=0.6,
+            max_tokens=600,
+        )
+        return chat_completion.choices[0].message.content.strip()
+    except Exception as e:
+        return f"Error communicating with AI: {str(e)}"
